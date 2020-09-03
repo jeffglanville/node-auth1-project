@@ -1,10 +1,11 @@
 const express = require("express")
 const bcrypt = require("bcryptjs")
 const Users =  require("./users-model")
+const usersMiddleware = require("./users-middleware")
 
 const router = express.Router()
 
-router.get("/users", async (req, res, next) => {
+router.get("/users", usersMiddleware.restrict(), async (req, res, next) => {
     try{
         res.json(await Users.find())
     }catch (err) {
@@ -57,3 +58,19 @@ router.post("/login", async (req, res, next) => {
         next(err)
     }
 })
+
+router.get("/logoff", usersMiddleware.restrict(), async (req, res, next) => {
+    try {
+        req.session.destroy((err) => {
+            if (err) {
+                next(err)
+            }else {
+                res.status(204).end()
+            }
+        })
+    }catch (err) {
+        next(err)
+    }
+})
+
+module.exports = router
