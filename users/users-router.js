@@ -5,7 +5,7 @@ const usersMiddleware = require("./users-middleware")
 
 const router = express.Router()
 
-router.get("/users", usersMiddleware.restrict(), async (req, res, next) => {
+router.get("/", usersMiddleware.restrict(), async (req, res, next) => {
     try{
         res.json(await Users.find())
     }catch (err) {
